@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Question · For AK</title>
+  <meta name="description" content="One question, asked properly." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <div class="petals" aria-hidden="true">
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#e79bab"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#f2c1cb"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#e79bab"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#f7d7bd"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#f2c1cb"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#e79bab"/></svg>
+    <svg class="petal" viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="#f7d7bd"/></svg>
+  </div>
+
+  <nav class="top">
+    <a href="index.html">For You</a>
+    <a href="me.html">About Me</a>
+    <a href="date.html" aria-current="page">A Question</a>
+  </nav>
+
+  <main class="wrap">
+    <article class="letter">
+      <p class="eyebrow">the whole reason for all this · page three</p>
+
+      <h1>So, <em>AK</em>&hellip;<br />may I take you on a date?</h1>
+
+      <p class="lead">
+        Not a big, complicated thing. Just you, me, and a few unhurried hours &mdash;
+        the way I've been imagining it.
+      </p>
+
+      <p>
+        Maybe a hot chocolate somewhere quiet. Maybe coffee that turns into three hours of talking.
+        Maybe we cook something together and let it be a little bit of a disaster. And if it's
+        raining that day, even better &mdash; I'll bring an umbrella so only your shoes get wet.
+      </p>
+
+      <p class="muted">
+        No pressure, no expectations. Just the version of us we already are, finally in the same place.
+        And yes &mdash; there will be real flowers this time.
+      </p>
+
+      <div class="divider"><span class="line"></span>&#10047;<span class="line"></span></div>
+
+      <!-- Interactive yes moment -->
+      <div id="ask" class="center">
+        <p class="lead center"><strong>What do you say?</strong></p>
+        <div class="btn-row">
+          <button class="btn" id="yesBtn">Yes, I'd love that</button>
+          <button class="btn ghost" id="maybeBtn">Ask me properly first &#128522;</button>
+        </div>
+      </div>
+
+      <div id="reply" class="center" hidden>
+        <p class="signoff" id="replyText"></p>
+        <p class="muted" id="replySub"></p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="foot">whatever you choose, I'm glad it's you &#10047;</footer>
+
+  <script>
+    const yesBtn   = document.getElementById('yesBtn');
+    const maybeBtn = document.getElementById('maybeBtn');
+    const ask      = document.getElementById('ask');
+    const reply    = document.getElementById('reply');
+    const replyText= document.getElementById('replyText');
+    const replySub = document.getElementById('replySub');
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function bloom() {
+      if (reduce) return;
+      const emojis = ['\u{1F338}', '\u{1F337}', '\u{1F33C}', '\u{1F490}'];
+      for (let i = 0; i < 18; i++) {
+        const f = document.createElement('div');
+        f.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        f.style.position = 'fixed';
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.top = '-40px';
+        f.style.fontSize = (18 + Math.random() * 20) + 'px';
+        f.style.zIndex = 5;
+        f.style.pointerEvents = 'none';
+        f.style.transition = 'transform 3.2s ease-in, opacity 3.2s ease-in';
+        document.body.appendChild(f);
+        requestAnimationFrame(() => {
+          f.style.transform = `translateY(${window.innerHeight + 80}px) rotate(${Math.random()*540-270}deg)`;
+          f.style.opacity = '0';
+        });
+        setTimeout(() => f.remove(), 3400);
+      }
+    }
+
+    yesBtn.addEventListener('click', () => {
+      ask.hidden = true;
+      reply.hidden = false;
+      replyText.textContent = 'You just made my whole year. \u{1F338}';
+      replySub.textContent = "Now come tell me in person \u2014 I'll plan everything, you just say when.";
+      bloom();
+      reply.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    });
+
+    maybeBtn.addEventListener('click', () => {
+      ask.hidden = true;
+      reply.hidden = false;
+      replyText.textContent = "That's completely fair. \u{1F60A}";
+      replySub.textContent = "Consider this the warm-up. Ask me anything \u2014 I'm not going anywhere.";
+      reply.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>

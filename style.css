@@ -1,0 +1,264 @@
+/* =========================================================
+   For AK — a little keepsake site
+   Theme: "monsoon garden at dusk" — blush, dusty rose, sage, soft gold
+   Shared styles for all pages
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Mulish:wght@300;400;500;600&display=swap');
+
+:root {
+  --ink:        #34232e;   /* deep plum-brown, main text */
+  --bg:         #fbeff0;   /* pale blush background      */
+  --paper:      #fffbf8;   /* card / letter surface      */
+  --rose:       #b85c6e;   /* dusty rose accent          */
+  --rose-deep:  #8e3f53;   /* deeper rose for hovers     */
+  --sage:       #7e9075;   /* muted stem green           */
+  --gold:       #c6a15b;   /* soft gold detail           */
+  --muted:      #8a7680;   /* muted supporting text      */
+
+  --display: 'Fraunces', Georgia, serif;
+  --body:    'Mulish', system-ui, sans-serif;
+
+  --maxw: 940px;
+  --radius: 18px;
+  --shadow: 0 18px 50px -24px rgba(52, 35, 46, 0.45);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #fde6df 0%, transparent 60%),
+    radial-gradient(900px 500px at 0% 110%, #f3e4ec 0%, transparent 55%),
+    var(--bg);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Ambient drifting petals ---------- */
+.petals { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.petal {
+  position: absolute;
+  top: -8%;
+  width: 26px; height: 26px;
+  opacity: 0.55;
+  animation: fall linear infinite;
+}
+.petal:nth-child(1){ left: 8%;  animation-duration: 17s; animation-delay: 0s;   }
+.petal:nth-child(2){ left: 22%; animation-duration: 22s; animation-delay: 4s;   width: 20px; height: 20px;}
+.petal:nth-child(3){ left: 39%; animation-duration: 19s; animation-delay: 9s;   }
+.petal:nth-child(4){ left: 55%; animation-duration: 24s; animation-delay: 2s;   width: 30px; height: 30px;}
+.petal:nth-child(5){ left: 70%; animation-duration: 20s; animation-delay: 6s;   }
+.petal:nth-child(6){ left: 85%; animation-duration: 23s; animation-delay: 11s;  width: 18px; height: 18px;}
+.petal:nth-child(7){ left: 93%; animation-duration: 18s; animation-delay: 3s;   }
+
+@keyframes fall {
+  0%   { transform: translateY(-10vh) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(112vh) rotate(300deg); opacity: 0; }
+}
+
+/* ---------- Layout ---------- */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 2rem 1.4rem 4rem;
+}
+
+/* ---------- Top navigation ---------- */
+nav.top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: 1.6rem 1rem 0.4rem;
+  flex-wrap: wrap;
+}
+nav.top a {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 1.5px solid transparent;
+  transition: color .25s, border-color .25s;
+}
+nav.top a:hover,
+nav.top a[aria-current="page"] { color: var(--rose-deep); border-color: var(--rose); }
+
+/* ---------- The "letter" card ---------- */
+.letter {
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid #f0e2e4;
+  padding: clamp(1.8rem, 5vw, 3.4rem);
+  margin-top: 1.4rem;
+  position: relative;
+}
+.letter::before {
+  /* soft inner keyline like an embossed card */
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid #f2dfe2;
+  border-radius: calc(var(--radius) - 8px);
+  pointer-events: none;
+}
+
+/* ---------- Eyebrow / small labels ---------- */
+.eyebrow {
+  font-family: var(--body);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin: 0 0 0.8rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.eyebrow::before, .eyebrow::after {
+  content: ""; height: 1px; flex: 1 1 auto; background: linear-gradient(90deg, transparent, #e7cdd2, transparent);
+}
+.eyebrow.left::before { display: none; }
+
+/* ---------- Headings & text ---------- */
+h1, h2, h3 { font-family: var(--display); font-weight: 500; color: var(--ink); line-height: 1.12; margin: 0 0 0.6rem; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 400; }
+h1 em { font-style: italic; color: var(--rose-deep); }
+h2 { font-size: clamp(1.6rem, 4.5vw, 2.2rem); margin-top: 2.4rem; }
+h3 { font-size: 1.15rem; }
+
+p { margin: 0 0 1.1rem; color: #4a3944; font-size: 1.06rem; }
+p.lead { font-size: 1.2rem; color: var(--ink); }
+.muted { color: var(--muted); }
+a.inline { color: var(--rose-deep); }
+
+.center { text-align: center; }
+.signoff {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--rose-deep);
+  margin-top: 1.8rem;
+}
+
+/* ---------- Pressed-flower divider ---------- */
+.divider { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2.2rem 0; color: var(--sage); }
+.divider .line { height: 1px; width: 70px; background: linear-gradient(90deg, transparent, #d9c3c8); }
+
+/* ---------- "Things about you" list ---------- */
+.notes { list-style: none; margin: 1.4rem 0 0; padding: 0; display: grid; gap: 0.9rem; }
+.notes li {
+  display: flex; gap: 0.9rem; align-items: flex-start;
+  padding: 0.9rem 1rem; border-radius: 12px;
+  background: linear-gradient(180deg, #fff 0%, #fdf5f6 100%);
+  border: 1px solid #f2e2e5;
+}
+.notes li .bud { flex: 0 0 auto; color: var(--rose); margin-top: 2px; }
+.notes li span.txt { color: #4a3944; }
+
+/* ---------- Observation cards (About Her page) ---------- */
+.observations {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .observations { grid-template-columns: 1fr 1fr; }
+}
+.observations li {
+  padding: 1.15rem 1.25rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff 0%, #fdf5f6 100%);
+  border: 1px solid #f2e2e5;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.observations li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px -18px rgba(142, 63, 83, 0.45);
+  border-color: #ecccd3;
+}
+.observations li .t {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.14rem;
+  color: var(--rose-deep);
+  margin-bottom: 0.3rem;
+}
+.observations li .t::before { content: "\275C\00a0"; color: var(--sage); font-style: normal; }
+.observations li .d { color: #4a3944; font-size: 1rem; margin: 0; }
+
+/* Full-width card that spans both columns for a highlighted line */
+@media (min-width: 640px) {
+  .observations li.span { grid-column: 1 / -1; }
+}
+.observations li.span {
+  background: linear-gradient(135deg, #fbe6ea 0%, #f7eef0 100%);
+  border-color: #efcdd4;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -12px rgba(142, 63, 83, 0.8);
+  transition: transform .2s, box-shadow .2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(142, 63, 83, 0.9); }
+.btn.ghost {
+  background: transparent; color: var(--rose-deep);
+  border: 1.5px solid var(--rose); box-shadow: none;
+}
+.btn.ghost:hover { background: #fbeef1; }
+
+.btn-row { display: flex; gap: 0.9rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+
+/* ---------- Page turn hint at bottom ---------- */
+.next {
+  margin-top: 2.6rem; text-align: center;
+}
+.next a {
+  font-family: var(--display); font-style: italic; font-size: 1.15rem;
+  color: var(--rose-deep); text-decoration: none;
+  border-bottom: 1px solid #e6ccd1; padding-bottom: 3px;
+}
+.next a:hover { border-color: var(--rose); }
+
+/* ---------- Footer ---------- */
+footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 2.4rem 1rem 1rem; position: relative; z-index: 1; }
+
+/* ---------- Focus visibility ---------- */
+:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .petal { animation: none; display: none; }
+  html { scroll-behavior: auto; }
+  .btn:hover { transform: none; }
+}
