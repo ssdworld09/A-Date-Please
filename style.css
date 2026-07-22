@@ -259,9 +259,78 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
 /* ---------- Focus visibility ---------- */
 :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 4px; }
 
+/* =========================================================
+   Interactive tiles + motion (progressive enhancement)
+   Activates only once JS marks the list enhanced.
+   Without JS, every card stays fully open and readable.
+   ========================================================= */
+
+/* gentle page-load lift for the whole letter */
+@keyframes riseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.letter { animation: riseIn .7s ease both; }
+
+/* small caption JS drops in above the tiles */
+.tiles-hint {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  margin: 0.2rem 0 0.2rem;
+}
+
+/* --- enhanced (clickable) tiles --- */
+.observations.is-enhanced li {
+  cursor: pointer;
+  position: relative;
+  padding-right: 3rem;            /* room for the flower mark */
+}
+.observations.is-enhanced li::after {
+  content: "\2740";               /* floral heart mark */
+  position: absolute;
+  top: 1.35rem;
+  right: 1.35rem;
+  color: var(--rose);
+  font-size: 0.95rem;
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), color .3s;
+}
+.observations.is-enhanced li:hover::after { color: var(--rose-deep); }
+.observations.is-enhanced li.open::after { transform: rotate(225deg); color: var(--rose-deep); }
+
+/* collapse the description; unfold on .open */
+.observations.is-enhanced li .d {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  transform: translateY(-4px);
+  overflow: hidden;
+  transition: max-height .5s cubic-bezier(.2,.8,.2,1),
+              opacity .4s ease,
+              margin-top .5s ease,
+              transform .5s ease;
+}
+.observations.is-enhanced li.open .d {
+  max-height: 22em;
+  opacity: 1;
+  margin-top: 0.6rem;
+  transform: none;
+}
+.observations.is-enhanced li:active { transform: translateY(-1px) scale(.995); }
+.observations.is-enhanced li.open {
+  border-color: #eebfc8;
+  box-shadow: 0 14px 34px -20px rgba(142, 63, 83, 0.55);
+}
+
+/* --- scroll reveal --- */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .petal { animation: none; display: none; }
   html { scroll-behavior: auto; }
   .btn:hover { transform: none; }
+  .letter { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .observations.is-enhanced li .d { transition: opacity .2s ease; }
+  .observations.is-enhanced li::after { transition: color .2s ease; }
 }
