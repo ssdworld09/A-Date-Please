@@ -104,8 +104,8 @@ nav.top a[aria-current="page"] { color: var(--rose-deep); border-color: var(--ro
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   border: 1px solid #f0e2e4;
-  padding: clamp(1.8rem, 5vw, 3.4rem);
-  margin-top: 1.4rem;
+  padding: clamp(2rem, 5.5vw, 3.9rem);
+  margin-top: 1.6rem;
   position: relative;
 }
 .letter::before {
@@ -134,28 +134,30 @@ nav.top a[aria-current="page"] { color: var(--rose-deep); border-color: var(--ro
 .eyebrow.left::before { display: none; }
 
 /* ---------- Headings & text ---------- */
-h1, h2, h3 { font-family: var(--display); font-weight: 500; color: var(--ink); line-height: 1.12; margin: 0 0 0.6rem; }
-h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 400; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; color: var(--ink); line-height: 1.14; margin: 0 0 0.6rem; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 400; margin-bottom: 1.1rem; }
 h1 em { font-style: italic; color: var(--rose-deep); }
-h2 { font-size: clamp(1.6rem, 4.5vw, 2.2rem); margin-top: 2.4rem; }
+h2 { font-size: clamp(1.6rem, 4.5vw, 2.2rem); margin-top: 3rem; margin-bottom: 1rem; }
 h3 { font-size: 1.15rem; }
 
-p { margin: 0 0 1.1rem; color: #4a3944; font-size: 1.06rem; }
-p.lead { font-size: 1.2rem; color: var(--ink); }
+p { margin: 0 0 1.45rem; color: #4a3944; font-size: 1.06rem; line-height: 1.8; max-width: 64ch; }
+p.lead { font-size: 1.2rem; color: var(--ink); margin-bottom: 1.8rem; max-width: 60ch; }
 .muted { color: var(--muted); }
 a.inline { color: var(--rose-deep); }
 
-.center { text-align: center; }
+.center { text-align: center; margin-left: auto; margin-right: auto; }
 .signoff {
   font-family: var(--display);
   font-style: italic;
   font-size: 1.35rem;
+  line-height: 1.5;
   color: var(--rose-deep);
-  margin-top: 1.8rem;
+  margin-top: 2.2rem;
+  max-width: 46ch;
 }
 
 /* ---------- Pressed-flower divider ---------- */
-.divider { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2.2rem 0; color: var(--sage); }
+.divider { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 3rem 0; color: var(--sage); }
 .divider .line { height: 1px; width: 70px; background: linear-gradient(90deg, transparent, #d9c3c8); }
 
 /* ---------- "Things about you" list ---------- */
@@ -172,17 +174,17 @@ a.inline { color: var(--rose-deep); }
 /* ---------- Observation cards (About Her page) ---------- */
 .observations {
   list-style: none;
-  margin: 1.6rem 0 0;
+  margin: 2rem 0 0;
   padding: 0;
   display: grid;
-  gap: 1rem;
+  gap: 1.35rem;
   grid-template-columns: 1fr;
 }
 @media (min-width: 640px) {
   .observations { grid-template-columns: 1fr 1fr; }
 }
 .observations li {
-  padding: 1.15rem 1.25rem;
+  padding: 1.5rem 1.6rem;
   border-radius: 14px;
   background: linear-gradient(180deg, #fff 0%, #fdf5f6 100%);
   border: 1px solid #f2e2e5;
@@ -197,12 +199,13 @@ a.inline { color: var(--rose-deep); }
   display: block;
   font-family: var(--display);
   font-style: italic;
-  font-size: 1.14rem;
+  font-size: 1.2rem;
+  line-height: 1.3;
   color: var(--rose-deep);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.55rem;
 }
 .observations li .t::before { content: "\275C\00a0"; color: var(--sage); font-style: normal; }
-.observations li .d { color: #4a3944; font-size: 1rem; margin: 0; }
+.observations li .d { color: #4a3944; font-size: 1rem; line-height: 1.75; margin: 0; max-width: none; }
 
 /* Full-width card that spans both columns for a highlighted line */
 @media (min-width: 640px) {
