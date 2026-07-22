@@ -1,9 +1,10 @@
 /* =========================================================
    interactions.js
    Clickable "love-letter" tiles: tap a title and the message
-   writes itself out (fast + skippable), finishes with a petal
-   burst, and the cards tilt toward the cursor. Pure progressive
-   enhancement — if this never loads, everything still shows.
+   blooms in word by word (fast + skippable), finishes with a
+   petal burst, and the cards tilt toward the cursor.
+   Pure progressive enhancement — if this never loads, the page
+   still shows everything.
    ========================================================= */
 (function () {
   "use strict";
@@ -15,8 +16,9 @@
 
   var PETAL_SVG =
     '<svg viewBox="0 0 32 32"><path d="M16 2 C22 8 26 14 16 30 C6 14 10 8 16 2 Z" fill="FILL"/></svg>';
-  var PETAL_COLORS = ['#e79bab', '#f2c1cb', '#f7d7bd'];
-  var CHARS_PER_FRAME = 2;   // typing speed — higher = faster
+  var PETAL_COLORS = ['#e79bab', '#f2c1cb', '#f7d7bd', '#dd8aa0'];
+  var WORD_STAGGER = 40;   // ms between words — lower = faster
+  var WORD_DUR = 500;      // must match .wd transition duration in CSS
 
   document.querySelectorAll('.observations').forEach(function (list, listIndex) {
     var items = Array.prototype.slice.call(list.querySelectorAll('li'));
@@ -40,13 +42,13 @@
       li.setAttribute('tabindex', '0');
       li.setAttribute('aria-controls', descId);
 
-      var state = { typing: false, typed: false, skip: false, fullHTML: desc.innerHTML };
+      var state = { animating: false, shown: false, fullHTML: desc.innerHTML, finish: null };
 
       var startOpen = li.classList.contains('span');
       setOpen(li, startOpen);
       if (startOpen) {
-        if (reduce) { state.typed = true; }
-        else { requestAnimationFrame(function () { typeWrite(li, desc, state); }); }
+        if (reduce) { state.shown = true; }
+        else { requestAnimationFrame(function () { bloom(li, desc, state); }); }
       }
 
       li.addEventListener('click', function () { activate(li, desc, state); });
@@ -66,20 +68,16 @@
     });
   });
 
-  /* --- open / type / skip / close --- */
+  /* --- open / bloom / skip / close --- */
   function activate(li, desc, state) {
-    // mid-typing tap = skip to full text
-    if (state.typing) { state.skip = true; return; }
+    if (state.animating) { if (state.finish) state.finish(); return; }  // skip to full
 
     var isOpen = li.classList.contains('open');
     if (isOpen) { setOpen(li, false); return; }
 
     setOpen(li, true);
-    if (state.typed || reduce) {
-      desc.innerHTML = state.fullHTML;      // already written — show instantly
-    } else {
-      typeWrite(li, desc, state);
-    }
+    if (state.shown || reduce) { desc.innerHTML = state.fullHTML; }
+    else { bloom(li, desc, state); }
   }
 
   function setOpen(li, open) {
@@ -87,57 +85,82 @@
     li.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
-  /* --- the typewriter itself (preserves <em> styling & entities) --- */
-  function typeWrite(li, desc, state) {
-    if (reduce) { desc.innerHTML = state.fullHTML; state.typed = true; return; }
+  /* --- word-by-word bloom (keeps <em> italics & entities intact) --- */
+  function bloom(li, desc, state) {
+    if (reduce) { desc.innerHTML = state.fullHTML; state.shown = true; return; }
 
-    // collect every text node in reading order, then blank them out
-    var walker = document.createTreeWalker(desc, NodeFilter.SHOW_TEXT, null, false);
-    var nodes = [], n;
-    while ((n = walker.nextNode())) { nodes.push({ node: n, full: n.nodeValue }); n.nodeValue = ''; }
+    var words = tokenize(desc);
+    if (!words.length) { state.shown = true; return; }
 
-    var cursor = document.createElement('span');
-    cursor.className = 'type-cursor';
-    cursor.setAttribute('aria-hidden', 'true');
-    desc.appendChild(cursor);
+    state.animating = true;
+    words.forEach(function (w, i) { w.style.transitionDelay = (i * WORD_STAGGER) + 'ms'; });
 
-    state.typing = true; state.skip = false;
-    var ti = 0, ci = 0;
+    // trigger on next frame so the initial hidden state is committed
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        for (var i = 0; i < words.length; i++) words[i].classList.add('on');
+      });
+    });
+
+    var total = words.length * WORD_STAGGER + WORD_DUR;
+    var timer = setTimeout(function () { finish(); }, total);
 
     function finish() {
-      desc.innerHTML = state.fullHTML;
-      state.typing = false;
-      state.typed = true;
+      if (!state.animating) return;
+      clearTimeout(timer);
+      for (var i = 0; i < words.length; i++) {
+        words[i].style.transitionDelay = '0ms';
+        words[i].classList.add('on');
+      }
+      state.animating = false;
+      state.shown = true;
       petalBurst(li);
     }
-
-    function tick() {
-      if (state.skip) { finish(); return; }
-      var budget = CHARS_PER_FRAME;
-      while (budget-- > 0 && ti < nodes.length) {
-        var t = nodes[ti];
-        if (ci < t.full.length) { t.node.nodeValue += t.full.charAt(ci); ci++; }
-        else { ti++; ci = 0; }
-      }
-      if (ti >= nodes.length) { finish(); }
-      else { requestAnimationFrame(tick); }
-    }
-    requestAnimationFrame(tick);
+    state.finish = finish;
   }
 
-  /* --- petals drifting up when a card finishes --- */
+  // replace each text node with word spans + whitespace, preserving structure
+  function tokenize(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    var texts = [], n;
+    while ((n = walker.nextNode())) texts.push(n);
+    texts.forEach(function (tn) {
+      var parts = tn.nodeValue.split(/(\s+)/);
+      var frag = document.createDocumentFragment();
+      parts.forEach(function (part) {
+        if (part === '') return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); }
+        else {
+          var s = document.createElement('span');
+          s.className = 'wd';
+          s.textContent = part;
+          frag.appendChild(s);
+        }
+      });
+      tn.parentNode.replaceChild(frag, tn);
+    });
+    return root.querySelectorAll('.wd');
+  }
+
+  /* --- a generous petal burst --- */
   function petalBurst(li) {
     if (reduce) return;
-    for (var k = 0; k < 6; k++) {
+    var count = 14;
+    for (var k = 0; k < count; k++) {
       var p = document.createElement('span');
       p.className = 'burst-petal';
       p.innerHTML = PETAL_SVG.replace('FILL', PETAL_COLORS[k % PETAL_COLORS.length]);
-      p.style.left = (18 + Math.random() * 64) + '%';
-      p.style.setProperty('--dx', (Math.random() * 44 - 22).toFixed(0) + 'px');
-      p.style.setProperty('--dy', (-55 - Math.random() * 55).toFixed(0) + 'px');
-      p.style.setProperty('--dr', (Math.random() * 260 - 130).toFixed(0) + 'deg');
+      var size = 16 + Math.random() * 12;                 // 16–28px
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = (10 + Math.random() * 80) + '%';
+      p.style.top = (25 + Math.random() * 45) + '%';
+      p.style.setProperty('--dx', (Math.random() * 90 - 45).toFixed(0) + 'px');
+      p.style.setProperty('--dy', (-80 - Math.random() * 80).toFixed(0) + 'px');
+      p.style.setProperty('--dr', (Math.random() * 320 - 160).toFixed(0) + 'deg');
+      p.style.animationDelay = (Math.random() * 160).toFixed(0) + 'ms';
       li.appendChild(p);
-      (function (el) { setTimeout(function () { el.remove(); }, 1200); })(p);
+      (function (el) { setTimeout(function () { el.remove(); }, 1700); })(p);
     }
   }
 

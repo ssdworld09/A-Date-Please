@@ -174,11 +174,12 @@ a.inline { color: var(--rose-deep); }
 /* ---------- Observation cards (About Her page) ---------- */
 .observations {
   list-style: none;
-  margin: 2rem 0 0;
+  margin: 1.4rem 0 0;
   padding: 0;
   display: grid;
-  gap: 1.35rem;
+  gap: 1.2rem;
   grid-template-columns: 1fr;
+  align-items: start;
 }
 @media (min-width: 640px) {
   .observations { grid-template-columns: 1fr 1fr; }
@@ -270,25 +271,25 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
 .letter { animation: riseIn .7s ease both; }
 
 /* small caption JS drops in above the tiles */
+.observations.is-enhanced { margin-top: 0.4rem; }
 .tiles-hint {
   text-align: center;
   color: var(--muted);
   font-size: 0.8rem;
   letter-spacing: 0.05em;
-  margin: 0.2rem 0 0.2rem;
+  margin: 1.4rem 0 0.7rem;
 }
 
 /* --- enhanced (clickable) tiles --- */
 .observations.is-enhanced li {
   cursor: pointer;
   position: relative;
-  padding-right: 3rem;            /* room for the flower mark */
 }
 .observations.is-enhanced li::after {
   content: "\2740";               /* floral heart mark */
   position: absolute;
-  top: 1.35rem;
-  right: 1.35rem;
+  top: 1.4rem;
+  right: 1.4rem;
   color: var(--rose);
   font-size: 0.95rem;
   transition: transform .45s cubic-bezier(.2,.8,.2,1), color .3s;
@@ -321,7 +322,7 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
 }
 
 /* ink underline that draws itself under the title on hover */
-.observations.is-enhanced li .t { position: relative; }
+.observations.is-enhanced li .t { position: relative; margin-bottom: 0; padding-right: 1.6rem; }
 .observations.is-enhanced li .t::after {
   content: "";
   position: absolute;
@@ -333,34 +334,35 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
 .observations.is-enhanced li:hover .t::after,
 .observations.is-enhanced li.open .t::after { width: 72%; }
 
-/* blinking ink caret while the letter "writes itself" */
-.type-cursor {
+/* --- words that "bloom" in, one after another --- */
+.observations.is-enhanced li .d .wd {
   display: inline-block;
-  width: 2px;
-  height: 1.05em;
-  margin-left: 2px;
-  background: var(--rose-deep);
-  vertical-align: -0.15em;
-  border-radius: 1px;
-  animation: caretBlink .9s steps(1) infinite;
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(5px);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1), filter .5s ease;
+  will-change: opacity, transform, filter;
 }
-@keyframes caretBlink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+.observations.is-enhanced li .d .wd.on {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
 
-/* petals that drift up when a card finishes writing */
+/* petals that drift up when a card finishes */
 .burst-petal {
   position: absolute;
-  bottom: 1.1rem;
-  width: 15px; height: 15px;
   pointer-events: none;
-  z-index: 3;
+  z-index: 4;
   opacity: 0;
-  animation: petalFloat 1.15s ease-out forwards;
+  animation: petalFloat 1.35s cubic-bezier(.2,.7,.3,1) forwards;
+  filter: drop-shadow(0 3px 4px rgba(142,63,83,0.18));
 }
 .burst-petal svg { width: 100%; height: 100%; display: block; }
 @keyframes petalFloat {
-  0%   { opacity: 0;   transform: translate(0, 0) rotate(0deg); }
-  18%  { opacity: .9; }
-  100% { opacity: 0;   transform: translate(var(--dx, 0), var(--dy, -80px)) rotate(var(--dr, 180deg)); }
+  0%   { opacity: 0;   transform: translate(0, 0) rotate(0deg) scale(.4); }
+  20%  { opacity: 1;   transform: translate(0, -8px) rotate(25deg) scale(1.05); }
+  100% { opacity: 0;   transform: translate(var(--dx, 0), var(--dy, -110px)) rotate(var(--dr, 200deg)) scale(.9); }
 }
 
 /* --- scroll reveal --- */
@@ -376,6 +378,6 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
   .reveal { opacity: 1; transform: none; transition: none; }
   .observations.is-enhanced li .d { transition: opacity .2s ease; }
   .observations.is-enhanced li::after { transition: color .2s ease; }
-  .type-cursor { animation: none; display: none; }
-  .burst-petal { display: none; }
+  .type-cursor, .burst-petal { display: none; }
+  .observations.is-enhanced li .d .wd { opacity: 1; transform: none; filter: none; transition: none; }
 }
