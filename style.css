@@ -309,7 +309,7 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
               transform .5s ease;
 }
 .observations.is-enhanced li.open .d {
-  max-height: 22em;
+  max-height: 26em;
   opacity: 1;
   margin-top: 0.6rem;
   transform: none;
@@ -318,6 +318,49 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
 .observations.is-enhanced li.open {
   border-color: #eebfc8;
   box-shadow: 0 14px 34px -20px rgba(142, 63, 83, 0.55);
+}
+
+/* ink underline that draws itself under the title on hover */
+.observations.is-enhanced li .t { position: relative; }
+.observations.is-enhanced li .t::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -3px;
+  height: 1.5px; width: 0;
+  background: linear-gradient(90deg, var(--rose), transparent);
+  transition: width .45s cubic-bezier(.2,.8,.2,1);
+}
+.observations.is-enhanced li:hover .t::after,
+.observations.is-enhanced li.open .t::after { width: 72%; }
+
+/* blinking ink caret while the letter "writes itself" */
+.type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  background: var(--rose-deep);
+  vertical-align: -0.15em;
+  border-radius: 1px;
+  animation: caretBlink .9s steps(1) infinite;
+}
+@keyframes caretBlink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+
+/* petals that drift up when a card finishes writing */
+.burst-petal {
+  position: absolute;
+  bottom: 1.1rem;
+  width: 15px; height: 15px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  animation: petalFloat 1.15s ease-out forwards;
+}
+.burst-petal svg { width: 100%; height: 100%; display: block; }
+@keyframes petalFloat {
+  0%   { opacity: 0;   transform: translate(0, 0) rotate(0deg); }
+  18%  { opacity: .9; }
+  100% { opacity: 0;   transform: translate(var(--dx, 0), var(--dy, -80px)) rotate(var(--dr, 180deg)); }
 }
 
 /* --- scroll reveal --- */
@@ -333,4 +376,6 @@ footer.foot { text-align: center; color: var(--muted); font-size: 0.8rem; paddin
   .reveal { opacity: 1; transform: none; transition: none; }
   .observations.is-enhanced li .d { transition: opacity .2s ease; }
   .observations.is-enhanced li::after { transition: color .2s ease; }
+  .type-cursor { animation: none; display: none; }
+  .burst-petal { display: none; }
 }
