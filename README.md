@@ -1,4 +1,4 @@
-# For AK — a little keepsake site
+# For Revati — a little keepsake site
 
 A small, three-page romantic site you can host for free on GitHub Pages and send as a link.
 
@@ -28,7 +28,7 @@ Everything is plain HTML/CSS with a tiny bit of JavaScript — no build step, no
 
 ## Editing the words
 
-- Replace **AK** with her name wherever you like it to appear (it's in `index.html` and `date.html`).
+- Her name (**Revati**) appears in the page titles, the "for Revati" label on `index.html`, and the heading on `date.html`.
 - All the copy is right there in the HTML between the tags — just change the text, keep the tags.
 - Add or remove points in the "things I've noticed" and "what you can count on" lists by copying a `<li>...</li>` line.
 
